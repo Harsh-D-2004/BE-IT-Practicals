@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 
 class conflation {
@@ -58,6 +59,10 @@ class conflation {
             return word.substring(0, word.length() - 3);
         }
 
+        if (word.endsWith("es")) {
+            return word.substring(0, word.length() - 2);
+        }
+
         if (word.endsWith("ed")) {
             return word.substring(0, word.length() - 2);
         }
@@ -79,12 +84,17 @@ class conflation {
 
     public static void main(String[] args) throws IOException {
 
-        System.out.println("Output : ");
-
-        String text = "I be doing that homework everyday so i can be successful";
-
-        Map<String, Integer> map = conflationAlgo(text);
-        printMap(map);
+        
+        try (Scanner scanner = new Scanner(System.in)) {
+            System.out.println("Enter your text:");
+            String text = scanner.nextLine();
+            
+            System.out.println("Output : ");
+            Map<String, Integer> map = conflationAlgo(text);
+            printMap(map);
+        }catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
 
     }
 
