@@ -1,3 +1,23 @@
+doc1.txt
+apple 2
+banana 1
+
+doc2.txt
+banana 3
+grape 1
+
+doc3.txt
+grape 2
+orange 1
+
+doc4.txt
+apple 3
+banana 2
+lemon 1
+
+
+Code : 
+
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -245,3 +265,47 @@ class SinglePassAlgorithm {
         return answer;
     }
 }
+
+
+PS D:\BE-IT-Practicals\Information_Retrieval\Assignement 2> java .\SinglePassAlgorithm.java
+
+Vocabulary: [apple, banana, grape, lemon, orange]
+
+Document-Token Matrix:
+Doc 1: [2, 1, 0, 0, 0]
+Doc 2: [0, 3, 1, 0, 0]
+Doc 3: [0, 0, 2, 0, 1]
+Doc 4: [3, 2, 0, 1, 0]
+
+Enter threshold:
+0.50
+
+Choose clustering algorithm:
+1. Single Pass Algorithm (Disjoint Clustering)
+2. Single Pass Algorithm (Overlapping Clustering)
+3. Exit
+Enter your choice: 1
+
+Running Single Pass Algorithm (Disjoint Clustering):
+
+Cluster 0: Doc0 Doc3
+Cluster 1: Doc1
+Cluster 2: Doc2
+Choose clustering algorithm:
+1. Single Pass Algorithm (Disjoint Clustering)
+2. Single Pass Algorithm (Overlapping Clustering)
+3. Exit
+Enter your choice: 2
+
+Running Single Pass Algorithm (Overlapping Clustering):
+Cluster 0: Doc0 Doc3
+Cluster 1: Doc1 Doc3
+Cluster 2: Doc2
+
+Choose clustering algorithm:
+1. Single Pass Algorithm (Disjoint Clustering)
+2. Single Pass Algorithm (Overlapping Clustering)
+3. Exit
+Enter your choice: 3
+Exiting program.
+PS D:\BE-IT-Practicals\Information_Retrieval\Assignement 2> 
