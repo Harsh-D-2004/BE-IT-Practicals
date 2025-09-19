@@ -1,0 +1,86 @@
+import java.util.*;
+
+public class A5 {
+
+    public static double[] calculatePrecisionRecall(List<String> A, List<String> R) {
+        Set<String> setA = new HashSet<>(A);
+        Set<String> setR = new HashSet<>(R);
+
+        Set<String> Ra = new HashSet<>(setA);
+        Ra.retainAll(setR);
+
+        double precision = setA.size() > 0 ? (double) Ra.size() / setA.size() : 0;
+        double recall = setR.size() > 0 ? (double) Ra.size() / setR.size() : 0;
+
+        return new double[]{Ra.size(), precision, recall};
+    }
+
+    public static double calculateFMeasure(double precision, double recall) {
+        if (precision + recall == 0) return 0;
+        return (2 * precision * recall) / (precision + recall);
+    }
+
+    public static double calculateEMeasure(double precision, double recall, double beta) {
+        if (precision + recall == 0) return 0;
+        return ((1 + beta * beta) * precision * recall) / ((beta * beta * precision) + recall);
+    }
+
+    public static List<double[]> generateTable(List<String> retrievedDocs, List<String> relevantDocs) {
+        System.out.printf("%-60s %-5s %-5s %-10s %-10s%n", "Documents", "|Ra|", "|A|", "Precision", "Recall");
+        System.out.println("-----------------------------------------------------------------------------------------------");
+
+        List<double[]> results = new ArrayList<>();
+
+        for (int i = 1; i <= retrievedDocs.size(); i++) {
+            List<String> currentSet = retrievedDocs.subList(0, i);
+            double[] metrics = calculatePrecisionRecall(currentSet, relevantDocs);
+
+            results.add(new double[]{metrics[1], metrics[2]}); // store precision, recall
+
+            String docsStr = String.join(",", currentSet);
+            System.out.printf("%-60s %-5.0f %-5d %-10.2f %-10.2f%n", docsStr, metrics[0], currentSet.size(),
+                    metrics[1] * 100, metrics[2] * 100);
+        }
+        return results;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter the retrieved documents (comma-separated): ");
+        List<String> retrievedDocs = Arrays.asList(sc.nextLine().split(","));
+        retrievedDocs.replaceAll(String::trim);
+
+        System.out.print("Enter the relevant documents (comma-separated): ");
+        List<String> relevantDocs = Arrays.asList(sc.nextLine().split(","));
+        relevantDocs.replaceAll(String::trim);
+
+        List<double[]> results = generateTable(retrievedDocs, relevantDocs);
+
+        System.out.print("\nEnter value of j (0 - " + (results.size() - 1) + ") to find F(j) and E(j): ");
+        int j = sc.nextInt();
+
+        double precision = results.get(j)[0];
+        double recall = results.get(j)[1];
+
+        double f1 = calculateFMeasure(precision, recall);
+
+        double eGreater = calculateEMeasure(precision, recall, 2);
+        double eEqual = calculateEMeasure(precision, recall, 1);
+        double eLess = calculateEMeasure(precision, recall, 0.5);
+
+        System.out.println("\n---------------------------------");
+        System.out.printf("| Harmonic mean (F1) is: | %.2f |\n", f1);
+        System.out.println("---------------------------------\n");
+
+        System.out.println("        ----------------------------");
+        System.out.println("        |          E-Value          |");
+        System.out.println("        ----------------------------");
+        System.out.println("        |   b>1   |   b=1   |  b<1  |");
+        System.out.println("        ----------------------------");
+        System.out.printf("        |  %.2f  |  %.2f  |  %.2f |\n", eGreater, eEqual, eLess);
+        System.out.println("        ----------------------------");
+
+        sc.close();
+    }
+}
