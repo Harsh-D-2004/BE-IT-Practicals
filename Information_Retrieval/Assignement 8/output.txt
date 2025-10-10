@@ -1,6 +1,11 @@
 CODE : 
 
 import requests
+import dotenv
+import os
+
+dotenv.load_dotenv()
+
 
 def get_coordinates(city):
     url = "https://geocoding-api.open-meteo.com/v1/search"
@@ -10,9 +15,15 @@ def get_coordinates(city):
 
     if "results" in data and len(data["results"]) > 0:
         result = data["results"][0]
-        return result["latitude"], result["longitude"], result["name"], result.get("country", "")
+        return (
+            result["latitude"],
+            result["longitude"],
+            result["name"],
+            result.get("country", ""),
+        )
     else:
         return None, None, None, None
+
 
 def get_weather(city):
     lat, lon, city_name, country = get_coordinates(city)
@@ -20,56 +31,30 @@ def get_weather(city):
         print(f"City '{city}' not found.")
         return
 
-    url = "https://api.open-meteo.com/v1/forecast"
-    params = {
-        "latitude": lat,
-        "longitude": lon,
-        "current_weather": True
-    }
+    API_KEY = os.getenv("API_KEY")
+
+    url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API_KEY}"
+    params = {"latitude": lat, "longitude": lon, "current_weather": True}
     response = requests.get(url, params=params)
     data = response.json()
 
-    if "current_weather" in data:
-        weather = data["current_weather"]
-        temp = weather["temperature"]
-        wind_speed = weather["windspeed"]
-        weather_code = weather["weathercode"]
+    if "weather" in data:
+        weather = data["weather"][0]["main"]
+        description = data["weather"][0]["description"]
 
-        weather_descriptions = {
-            0: ("Clear", "Clear sky"),
-            1: ("Mainly Clear", "Mainly clear"),
-            2: ("Partly Cloudy", "Partly cloudy"),
-            3: ("Overcast", "Overcast"),
-            45: ("Fog", "Foggy"),
-            48: ("Depositing Rime Fog", "Rime fog"),
-            51: ("Light Drizzle", "Light drizzle"),
-            53: ("Moderate Drizzle", "Moderate drizzle"),
-            55: ("Dense Drizzle", "Dense drizzle"),
-            61: ("Slight Rain", "Slight rain"),
-            63: ("Moderate Rain", "Moderate rain"),
-            65: ("Heavy Rain", "Heavy rain"),
-            71: ("Slight Snow", "Slight snow"),
-            73: ("Moderate Snow", "Moderate snow"),
-            75: ("Heavy Snow", "Heavy snow"),
-            77: ("Snow Grains", "Snow grains"),
-            80: ("Slight Rain Showers", "Slight rain showers"),
-            81: ("Moderate Rain Showers", "Moderate rain showers"),
-            82: ("Violent Rain Showers", "Violent rain showers"),
-            85: ("Slight Snow Showers", "Slight snow showers"),
-            86: ("Heavy Snow Showers", "Heavy snow showers"),
-            95: ("Thunderstorm", "Thunderstorm"),
-            96: ("Thunderstorm with Hail", "Thunderstorm with slight hail"),
-            99: ("Thunderstorm with Heavy Hail", "Thunderstorm with heavy hail"),
-        }
+    if "main" in data:
+        temp = data["main"]["temp"]
 
-        main, desc = weather_descriptions.get(weather_code, ("Unknown", "No description"))
+    if "wind" in data:
+        wind_speed = data["wind"]["speed"]
 
         print(f"{city_name}'s temperature: {temp}°C")
         print(f"Wind speed: {wind_speed} m/s")
-        print(f"Description: {desc}")
-        print(f"Weather: {main}")
+        print(f"Description: {description}")
+        print(f"Weather: {weather}")
     else:
         print("Weather data not available.")
+
 
 if __name__ == "__main__":
     city = input("Enter the city: ")
@@ -78,17 +63,22 @@ if __name__ == "__main__":
 
 OUTPUT :
 
-Enter the city: Paris
-Paris's temperature: 20.5°C
-Wind speed: 2.6 m/s
-Description: Moderate rain showers
-Weather: Moderate rain showers
-
-Enter the city: London
-London's temperature: 11.5°C
-Wind speed: 2.1 m/s
-Description: Slight rain
-Weather: Slight rain
-
-Enter the city: New York
-City 'New York' not found.
+PS D:\BE-IT-Practicals\Information_Retrieval\Assignement 8> python A8.py
+Enter the city: Pune
+Pune's temperature: 298.14°C
+Wind speed: 2.54 m/s
+Description: clear sky
+Weather: Clear
+PS D:\BE-IT-Practicals\Information_Retrieval\Assignement 8> python A8.py
+Enter the city: Bangalore
+Bengaluru's temperature: 297.66°C
+Wind speed: 2.44 m/s
+Description: overcast clouds
+Weather: Clouds
+PS D:\BE-IT-Practicals\Information_Retrieval\Assignement 8> python A8.py
+Enter the city: Tokyo
+Tokyo's temperature: 295.35°C
+Wind speed: 2.17 m/s
+Description: broken clouds
+Weather: Clouds
+PS D:\BE-IT-Practicals\Information_Retrieval\Assignement 8> 
