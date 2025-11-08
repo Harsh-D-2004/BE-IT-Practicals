@@ -1,2 +1,0 @@
-grape 2
-orange 1
