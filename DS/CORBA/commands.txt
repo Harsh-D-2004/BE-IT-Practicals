@@ -1,0 +1,9 @@
+idlj -fall Calculator.idl
+
+javac CalculatorApp/*.java
+
+javac *.java
+
+NEW TERMINAL : orbd -ORBInitialPort 1050
+NEW TERMINAL : ojava Server -ORBInitialHost localhost -ORBInitialPort 1050
+NEW TERMINAL : java Client -ORBInitialHost localhost -ORBInitialPort 1050

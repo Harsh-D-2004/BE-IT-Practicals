@@ -1,0 +1,12 @@
+wget https://downloads.sourceforge.net/project/mpjexpress/releases/mpj-v0_44.tar.gz
+
+ar -xvzf mpj-v0_44.tar.gz
+
+export MPJ_HOME="$HOME/Downloads/mpj-v0_44"
+
+ls "$MPJ_HOME/lib/mpj.jar"
+
+
+javac -cp ".:$MPJ_HOME/lib/mpj.jar" DistributedSum.java
+
+$MPJ_HOME/bin/mpjrun.sh -np 4 DistributedSum
