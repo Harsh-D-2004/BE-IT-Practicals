@@ -1,74 +1,108 @@
 import java.util.Scanner;
 
+class customProcess {
+
+    int id;
+    String status;
+
+    customProcess(int id) {
+        this.id = id;
+        status = "active";
+    }
+}
+
 public class Ring {
 
     Scanner sc;
-    Process[] processes;
+    customProcess[] processes;
     int n;
 
     public Ring() {
         sc = new Scanner(System.in);
     }
 
-    public void ring() {
+    public void createProcesses() {
 
         System.out.print("Enter total number of processes: ");
         n = sc.nextInt();
 
-        processes = new Process[n];
+        processes = new customProcess[n];
+
         for (int i = 0; i < n; i++) {
-            processes[i] = new Process(i);
+            processes[i] = new customProcess(i);
         }
     }
 
     public void performElection() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
-        System.out.println("Process " + processes[getMaxValue()].id + " fails");
+        int failedProcess = getMaxProcess();
 
-        processes[getMaxValue()].status = "Inactive";
+        System.out.println("\nProcess "
+                + failedProcess
+                + " fails");
 
-        int idOfInitiator = 0;
-        boolean overStatus = true;
+        processes[failedProcess].status = "inactive";
 
-        while (overStatus) {
-            System.out.println();
-            int nextProcess = (idOfInitiator + 1) % n;
+        int initiator = 0;
 
-            if (processes[nextProcess].status == "active") {
-                System.out.println("Process " + idOfInitiator + " passes Election(" + idOfInitiator + ") message to Process " + nextProcess);
+        String message = "";
+
+        int current = initiator;
+
+        do {
+
+            message += current + " ";
+
+            int next = (current + 1) % n;
+
+            while (processes[next].status.equals("inactive")) {
+                next = (next + 1) % n;
             }
 
-            if (processes[nextProcess].status == "active" && nextProcess == getMaxValue()) {
-                System.out.println("Process " + nextProcess + " becomes the coordinator.");
-                overStatus = false;
-                break;
-            }
+            System.out.println(
+                    "\nProcess "
+                    + current
+                    + " passes Election("
+                    + message.trim()
+                    + ") to Process "
+                    + next
+            );
 
-            idOfInitiator = nextProcess;
-        }
+            current = next;
+
+        } while (current != initiator);
+
+        int coordinator = getMaxProcess();
+
+        System.out.println(
+                "\nProcess "
+                + coordinator
+                + " becomes the coordinator."
+        );
     }
 
-    public int getMaxValue() {
-        int mxId = -99;
-        int mxIdIndex = 0;
-        for (int i = 0; i < processes.length; i++) {
-            if (processes[i].status == "active" && processes[i].id > mxId) {
-                mxId = processes[i].id;
-                mxIdIndex = i;
+    public int getMaxProcess() {
+
+        int maxId = -1;
+
+        for (int i = 0; i < n; i++) {
+
+            if (processes[i].status.equals("active")
+                    && processes[i].id > maxId) {
+
+                maxId = processes[i].id;
             }
         }
-        return mxIdIndex;
+
+        return maxId;
     }
 
     public static void main(String[] args) {
 
-    	Ring ring = new Ring();
-        ring.ring();
+        Ring ring = new Ring();
+
+        ring.createProcesses();
+
         ring.performElection();
     }
 }

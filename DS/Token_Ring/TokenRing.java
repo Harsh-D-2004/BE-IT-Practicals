@@ -21,7 +21,6 @@ class Process extends Thread {
 
             synchronized (ring) {
 
-                // Wait until this process gets token
                 while (ring.getTokenHolder() != id) {
                     try {
                         ring.wait();
@@ -30,12 +29,10 @@ class Process extends Thread {
                     }
                 }
 
-                // Critical Section
                 System.out.println("\n--------------------------------");
                 System.out.println("Token with Process " + id);
                 System.out.println("Process " + id + " ENTERS critical section");
 
-                // Other processes trying
                 for (int i = 0; i < ring.getN(); i++) {
 
                     if (i != id) {
@@ -46,7 +43,6 @@ class Process extends Thread {
                     }
                 }
 
-                // Hold critical section
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
@@ -55,7 +51,6 @@ class Process extends Thread {
 
                 System.out.println("Process " + id + " EXITS critical section");
 
-                // Random token passing
                 int next;
 
                 do {
@@ -66,11 +61,9 @@ class Process extends Thread {
 
                 System.out.println("Token passed to Process " + next);
 
-                // Wake all waiting threads
                 ring.notifyAll();
             }
 
-            // Small delay outside synchronized block
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -88,7 +81,6 @@ public class TokenRing {
     public TokenRing(int n) {
         this.n = n;
 
-        // Random initial token holder
         tokenHolder = new Random().nextInt(n);
     }
 
@@ -113,7 +105,6 @@ public class TokenRing {
 
         TokenRing ring = new TokenRing(n);
 
-        // Create processes (threads)
         for (int i = 0; i < n; i++) {
 
             Process p = new Process(i, ring);
