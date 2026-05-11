@@ -3,3 +3,10 @@ sudo apt install openjdk-8-jdk
 sudo update-alternatives --config java
 
 sudo update-alternatives --config javac
+
+
+chmod +x netbeans-8.2-linux.sh
+
+sudo ./netbeans-8.2-linux.sh
+
+https://dlc-cdn.sun.com/netbeans/8.0.2/final/
