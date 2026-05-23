@@ -11,6 +11,7 @@ public class CircleImpl extends UnicastRemoteObject implements Circle
     }
     @Override
     public double getArea(int radius) {
+<<<<<<< Updated upstream
     	
     	System.out.println("Remote method 'getArea()' invoked");
         System.out.println("Processing started on server...");
@@ -22,10 +23,14 @@ public class CircleImpl extends UnicastRemoteObject implements Circle
         System.out.println("Returning result to client...\n");
         
         return result;
+=======
+        return PI * radius * radius;
+>>>>>>> Stashed changes
     }
     
     @Override
     public double getPerimeter(int radius) {
+<<<<<<< Updated upstream
     	
     	System.out.println("Remote method 'getPerimeter()' invoked");
         System.out.println("Processing started on server...");
@@ -51,5 +56,8 @@ public class CircleImpl extends UnicastRemoteObject implements Circle
         System.out.println("Returning result to client...\n");
         
         return result;
+=======
+        return 2 * PI * radius;
+>>>>>>> Stashed changes
     }
 }

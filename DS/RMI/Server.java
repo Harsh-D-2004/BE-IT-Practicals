@@ -11,7 +11,11 @@ public class Server
             System.setProperty("java.rmi.server.hostname", "127.0.0.1");
             Registry registry = LocateRegistry.createRegistry(4000);
             Circle stub = new CircleImpl();
+<<<<<<< Updated upstream
             registry.rebind("circle", stub);
+=======
+            registry.rebind("rmi://localhost:4000/circle", stub);
+>>>>>>> Stashed changes
         } 
         catch (Exception e) 
         {

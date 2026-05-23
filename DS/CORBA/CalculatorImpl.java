@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import CalculatorApp.*;
 import org.omg.CORBA.*;
 import org.omg.PortableServer.*;
@@ -6,20 +7,49 @@ public class CalculatorImpl extends CalculatorPOA {
 
     @Override
     public double add(double x, double y) {
+=======
+import org.omg.CORBA.ORB;
+import CalculatorApp.CalculatorPOA;
+
+public class CalculatorImpl extends CalculatorPOA 
+{
+    private ORB orb;
+    public CalculatorImpl(ORB orb) 
+    {
+        super();
+        this.orb = orb;
+    }
+
+    @Override
+    public double add(double x, double y) 
+    {
+>>>>>>> Stashed changes
         return x + y;
     }
 
     @Override
+<<<<<<< Updated upstream
     public double subtract(double x, double y) {
         return x - y;
     }
 
     @Override
     public double multiply(double x, double y) {
+=======
+    public double subtract(double x, double y) 
+    {
+        return x- y;
+    }
+
+    @Override
+    public double multiply(double x, double y) 
+    {
+>>>>>>> Stashed changes
         return x * y;
     }
 
     @Override
+<<<<<<< Updated upstream
     public double divide(double x, double y) {
 
         if (y == 0)
@@ -34,3 +64,31 @@ public class CalculatorImpl extends CalculatorPOA {
 		
 	}
 }
+=======
+    public double divide(double x, double y) 
+    {
+        if (y == 0) {
+            return Double.MAX_VALUE;
+        }
+        return x / y;
+    }
+
+    @Override
+    public void shutdown() 
+    {
+        orb.shutdown(false);
+    }
+}
+//Calculator.idl
+module CalculatorApp
+{
+    interface Calculator
+    {
+        double add(in double x, in double y);
+        double subtract(in double x, in double y);
+        double multiply(in double x, in double y);
+        double divide(in double x, in double y);
+        oneway void shutdown();
+    };
+};
+>>>>>>> Stashed changes
